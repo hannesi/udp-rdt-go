@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reliability on top of UDP</title>
+</head>
+
+<body>
+    <h1>Reliability on top of UDP</h1>
+
+    <p>This document contains links to the solutions to the tasks.</p>
+
+    <h2>How to run the solutions</h2>
+
+    <p>TODO: update this section for Go</p>
+
+    <p>To run the solutions you need to have the <a href="https://www.rust-lang.org/tools/install" target="_blank">Rust
+            toolchain</a> installed.</p>
+
+    <p>To start the server, run:</p>
+    <code>cargo run --bin server</code>
+
+    <p>To start the client, run:</p>
+    <code>cargo run --bin client</code>
+
+    <h2>Solutions</h2>
+
+    <p>There are two links in front of each task description. The <i>examine</i> link points to the Github commit
+        containing the solution. The <i>download</i> link points to the release page of the solution from where you can
+        download the source code.</p>
+
+    <h3>Virtual Socket</h3>
+    <ol>
+        <li><a href="" target="_blank">[Examine]</a> <a href="" target="_blank">[Download]</a>
+            (2p) Make an application for testing purposes, e.g. client sends data to server and server displays it on
+            screen. It
+            is enough for the application to send data only in one direction (and later acknowledgements in the
+            other). Use the test application to test what you implement later.</li>
+
+        <li><a href="" target="_blank">[Examine]</a> <a href="" target="_blank">[Download]</a>
+            (2p) Make a virtual socket that randomly drops a packet (i.e. does not pass it to UDP socket or to the
+            application)</li>
+
+        <li><a href="" target="_blank">[Examine]</a> <a href="" target="_blank">[Download]</a>
+            (3p) Add to the virtual socket: randomly delays a packet, before passing it forward
+        </li>
+
+        <li><a href="" target="_blank">[Examine]</a> <a href="" target="_blank">[Download]</a>
+            (5p) Add to the virtual socket: randomly generates bit errors on the data of the packet, a single bit error
+            is enough.
+        </li>
+    </ol>
+
+    <h3>Positive and Negative ACKs</h3>
+    <ol>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (2p) Add to your data packet some method for detecting at least a single bit error.
+        </li>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (2p) Reliable data transfer with positive and negative ACKs
+        </li>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (4p) Reliable data transfer with only positive ACKs
+        </li>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (4p) Reliable data transfer with only negative ACKs
+        </li>
+    </ol>
+
+    <h3>Reliable Transfer Protocol</h3>
+    <ol>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (12p) Implement reliable data transfer on top of UDP that can handle packet loss, packet delay and single
+            bit error (detect error and react accordingly).
+        </li>
+    </ol>
+
+    <h3>Go-Back-N (GBN)</h3>
+    <ol>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (12p) Implement GBN on top of UDP.
+        </li>
+    </ol>
+
+    <h3>Selective Repeat</h3>
+    <ol>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (5p) Draw a finite-state machine (FSM) of Selective Repeat sender and receiver
+        </li>
+        <li><a href="" target="_blank">[Examine]</a>
+            <a href="" target="_blank">[Download]</a>
+            (7p) Implement Selective Repeat on top of UDP.
+        </li>
+    </ol>
+</body>
+
+</html>

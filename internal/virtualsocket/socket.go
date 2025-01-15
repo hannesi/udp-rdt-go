@@ -15,6 +15,7 @@ type VirtualSocket struct {
 	delay     time.Duration
 	delayRate float64
 	dropRate  float64
+	errorRate float64
 }
 
 // Creates a new virtual socket.
@@ -42,6 +43,7 @@ func NewVirtualSocket() (*VirtualSocket, error) {
 		delay:     config.DefaultConfig.VirtualSocketDelay,
 		delayRate: config.DefaultConfig.VirtualSocketDelayRate,
 		dropRate:  config.DefaultConfig.VirtualSocketDropRate,
+		errorRate: config.DefaultConfig.VirtualSocketErrorRate,
 	}, nil
 }
 
@@ -52,6 +54,8 @@ func (vs *VirtualSocket) Send(data []byte) error {
 	}
 
 	vs.handlePacketDelay()
+    
+    data = vs.handleBitError(data)
 
 	_, err := vs.socket.Write(data)
 	return err
@@ -77,4 +81,14 @@ func (vs *VirtualSocket) handlePacketDelay() {
 		log.Printf("Packet delayed by %d milliseconds.\n", vs.delay.Milliseconds())
 		time.Sleep(vs.delay)
 	}
+}
+
+func (vs *VirtualSocket) handleBitError(data []byte) []byte {
+	if rand.Float64() > vs.errorRate {
+		return data
+	}
+    log.Println("Bit error introduced.")
+	idx := rand.IntN(len(data))
+	data[idx] ^= 1 << uint(rand.IntN(8))
+	return data
 }

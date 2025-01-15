@@ -4,55 +4,43 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"net"
 	"os"
 	"strings"
 
 	"github.com/hannesi/udp-rdt-go/internal/config"
+	"github.com/hannesi/udp-rdt-go/internal/virtualsocket"
 )
 
 func main() {
 	fmt.Println("CLIENT")
 
-	destAddr := net.UDPAddr{
-		IP:   net.ParseIP(config.DefaultConfig.IPAddrString),
-		Port: config.DefaultConfig.ServerPort,
+    socket, err := virtualsocket.NewVirtualSocket()
+
+	if err != nil {
+		log.Fatalf("Failed to create UDP socket: %v", err)
 	}
 
-	socketAddr := net.UDPAddr{
-		IP:   net.ParseIP(config.DefaultConfig.IPAddrString),
-		Port: 0,
-	}
+	defer socket.Close()
 
-    socket, err := net.DialUDP("udp", &socketAddr, &destAddr)
+	fmt.Printf("Ready to send messages to %s:%d\n", config.DefaultConfig.IPAddrString, config.DefaultConfig.ServerPort)
+	fmt.Println("Usage: Type a message and hit enter :)")
 
-    if err != nil {
-        log.Fatalf("Failed to create UDP socket: %v", err)
-    }
+	reader := bufio.NewReader(os.Stdin)
 
-    defer socket.Close()
-
-    fmt.Printf("Ready to send messages to %s:%d\n", destAddr.IP, destAddr.Port)
-    fmt.Println("Usage: Type a message and hit enter :)")
-
-    reader := bufio.NewReader(os.Stdin)
-
-    for {
-        fmt.Print("Enter message: ")
-        msg, err := reader.ReadString('\n')
-        if err != nil {
-            log.Println("Failed to read input:", err)
-            continue
-        }
-
-        trimmedMsg := strings.TrimSpace(msg)
-
-        _, err = socket.Write([]byte(trimmedMsg))
-        		if err != nil {
-			log.Printf("Failed to send the message: %v\n", err)
-		} else {
-			fmt.Printf("Sending \"%s\" to %s:%d\n", trimmedMsg, destAddr.IP, destAddr.Port)
+	for {
+		fmt.Print("Enter message: ")
+		msg, err := reader.ReadString('\n')
+		if err != nil {
+			log.Println("Failed to read input:", err)
+			continue
 		}
-    }
+
+		trimmedMsg := strings.TrimSpace(msg)
+
+		err = socket.Send([]byte(trimmedMsg))
+		if err != nil {
+			log.Printf("Failed to send the message: %v\n", err)
+		}
+	}
 
 }

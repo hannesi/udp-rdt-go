@@ -36,7 +36,7 @@ func main() {
             break
         }
 
-        fmt.Printf("Msg \"%s\" received from %s\n", string(buffer[:n]), addr)
+        fmt.Printf("%s: \"%s\"\n", addr, string(buffer[:n]))
 
     }
 }

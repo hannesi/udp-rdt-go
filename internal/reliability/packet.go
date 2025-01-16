@@ -17,7 +17,7 @@ func NewReliableDataTransferPacket(payload []byte) *ReliableDataTransferPacket {
     packet := &ReliableDataTransferPacket{
         Payload: payload,
     }
-    packet.computeChecksum()
+    packet.Checksum = packet.computeChecksum()
     return packet
 }
 

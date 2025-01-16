@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/hannesi/udp-rdt-go/internal/config"
+	"github.com/hannesi/udp-rdt-go/internal/reliability/server"
 )
 
 func main() {
@@ -17,26 +18,27 @@ func main() {
         Port: config.DefaultConfig.ServerPort,
     }
 
-    conn, err := net.ListenUDP("udp", &addr) 
+    socket, err := net.ListenUDP("udp", &addr) 
 
     if err != nil {
         log.Fatal(err)
         os.Exit(1)
     }
-    defer conn.Close()
+    defer socket.Close()
+
+    reliabilityLayer := server.ReliabilityLayerWithBitErrorDetection{
+        Socket: socket,
+    }
 
     fmt.Printf("UDP server is listening on %s\n", addr.String())
 
-    buffer := make([]byte, 1024)
-
     for {
-        n, addr, err := conn.ReadFromUDP(buffer)
+        buffer, err := reliabilityLayer.Receive()
         if err != nil {
             log.Fatal(err)
             break
         }
 
-        fmt.Printf("%s: \"%s\"\n", addr, string(buffer[:n]))
-
+        fmt.Printf("%s: \"%s\"\n", addr.String(), string(buffer))
     }
 }

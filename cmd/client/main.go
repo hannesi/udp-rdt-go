@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hannesi/udp-rdt-go/internal/config"
+	"github.com/hannesi/udp-rdt-go/internal/reliability/client"
 	"github.com/hannesi/udp-rdt-go/internal/virtualsocket"
 )
 
@@ -21,6 +22,10 @@ func main() {
 	}
 
 	defer socket.Close()
+
+    reliabilityLayer := client.ReliabilityLayerWithBitErrorDetection {
+        Socket: socket, 
+    }
 
 	fmt.Printf("Ready to send messages to %s:%d\n", config.DefaultConfig.IPAddrString, config.DefaultConfig.ServerPort)
 	fmt.Println("Usage: Type a message and hit enter :)")
@@ -37,7 +42,7 @@ func main() {
 
 		trimmedMsg := strings.TrimSpace(msg)
 
-		err = socket.Send([]byte(trimmedMsg))
+		err = reliabilityLayer.Send([]byte(trimmedMsg))
 		if err != nil {
 			log.Printf("Failed to send the message: %v\n", err)
 		}

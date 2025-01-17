@@ -23,7 +23,7 @@ func main() {
 
 	defer socket.Close()
 
-    reliabilityLayer := client.ReliabilityLayerWithBitErrorDetection {
+    reliabilityLayer := client.ReliabilityLayerWithPositiveAndNegativeAcks {
         Socket: socket, 
     }
 

@@ -49,16 +49,30 @@ func NewVirtualSocket() (*VirtualSocket, error) {
 
 // Send data using the virtual socket.
 func (vs *VirtualSocket) Send(data []byte) error {
+    internalData := make([]byte, len(data))
+    copy(internalData, data)
+
 	if vs.shouldDrop() {
 		return nil
 	}
 
 	vs.handlePacketDelay()
     
-    data = vs.handleBitError(data)
+    internalData = vs.handleBitError(internalData)
 
-	_, err := vs.socket.Write(data)
+    log.Printf("Sending packet: %s", string(internalData))
+	_, err := vs.socket.Write(internalData)
 	return err
+}
+
+func (vs *VirtualSocket) Receive(buffer []byte) (int, error) {
+    n, err := vs.socket.Read(buffer)
+
+    if err != nil {
+        return n, err
+    }
+
+    return n, nil
 }
 
 // Close the socket wrapped inside the virtual socket.

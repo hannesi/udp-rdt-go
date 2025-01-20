@@ -8,13 +8,15 @@ import (
 
 // Represents a packet used for detecting bit errors.
 type ReliableDataTransferPacket struct {
+    Sequence uint8 // Sequence number of the packet.
     Payload []byte  // The payload of the packet.
     Checksum uint32 // The checksum calculated for the payload.
 }
 
 // Create a new rdt packet from provided payload. The checksum is calculated automagically.
-func NewReliableDataTransferPacket(payload []byte) *ReliableDataTransferPacket {
+func NewReliableDataTransferPacket(sequence uint8, payload []byte) *ReliableDataTransferPacket {
     packet := &ReliableDataTransferPacket{
+        Sequence: sequence,
         Payload: payload,
     }
     packet.Checksum = packet.computeChecksum()
@@ -22,7 +24,8 @@ func NewReliableDataTransferPacket(payload []byte) *ReliableDataTransferPacket {
 }
 
 func (p *ReliableDataTransferPacket) computeChecksum() uint32 {
-    return crc32.ChecksumIEEE(p.Payload)
+    data := append([]byte{p.Sequence}, p.Payload...)
+    return crc32.ChecksumIEEE(data)
 }
 
 // Returns true if the rdt packet's checksum matches the packet's payload's calculated checksum.
@@ -35,6 +38,11 @@ func (p *ReliableDataTransferPacket) Serialize() ([]byte, error) {
     buffer := new(bytes.Buffer)
 
     err := binary.Write(buffer, binary.BigEndian, p.Checksum)
+    if err != nil {
+        return nil, err
+    }
+
+    err = buffer.WriteByte(p.Sequence)
     if err != nil {
         return nil, err
     }
@@ -59,6 +67,11 @@ func Deserialize(data []byte) (*ReliableDataTransferPacket, error) {
         return nil, err
     }
 
+    sequence, err := buffer.ReadByte()
+    if err != nil {
+        return nil, err
+    }
+
     payload := make([]byte, buffer.Len())
     _, err = buffer.Read(payload)
     if err != nil {
@@ -67,6 +80,7 @@ func Deserialize(data []byte) (*ReliableDataTransferPacket, error) {
 
     return &ReliableDataTransferPacket{
         Payload: payload,
+        Sequence: sequence,
         Checksum: checksum,
     }, nil
 }

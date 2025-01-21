@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hannesi/udp-rdt-go/internal/reliability"
@@ -56,13 +57,13 @@ func (r *ReliabilityLayerWithPositiveAcks) receiveAck() (uint8, string, error) {
 	_, err := r.Socket.Receive(buffer)
 
 	if err != nil {
-		log.Println("Error receiving ACK:", err.Error())
+		err = fmt.Errorf("Error receiving ACK: %s", err.Error())
 		return 0, "", err
 	}
 
 	sequence, ack, err := reliability.DeserializeAckData(buffer)
 	if err != nil {
-		log.Println("Error deserializing ACK:", err.Error())
+		err = fmt.Errorf("Error deserializing ACK: %s", err.Error())
 		return 0, "", err
 	}
 

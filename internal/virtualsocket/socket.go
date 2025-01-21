@@ -60,7 +60,7 @@ func (vs *VirtualSocket) Send(data []byte) error {
     
     internalData = vs.handleBitError(internalData)
 
-    log.Printf("Sending packet: %s", string(internalData))
+    log.Printf("Sending packet: %b", internalData)
 	_, err := vs.socket.Write(internalData)
 	return err
 }

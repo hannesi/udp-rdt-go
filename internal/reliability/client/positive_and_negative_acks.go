@@ -12,7 +12,7 @@ type ReliabilityLayerWithPositiveAndNegativeAcks struct {
 }
 
 func (r *ReliabilityLayerWithPositiveAndNegativeAcks) Send(data []byte) error {
-	packet := reliability.NewReliableDataTransferPacket(data)
+	packet := reliability.NewReliableDataTransferPacket(0, data)
 
 	serializedPacket, err := packet.Serialize()
 	if err != nil {

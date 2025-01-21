@@ -66,6 +66,7 @@ func (vs *VirtualSocket) Send(data []byte) error {
 }
 
 func (vs *VirtualSocket) Receive(buffer []byte) (int, error) {
+    vs.socket.SetReadDeadline(time.Now().Add(3 * time.Second))
     n, err := vs.socket.Read(buffer)
 
     if err != nil {

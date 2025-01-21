@@ -30,9 +30,9 @@ func (r *ReliabilityLayerWithPositiveAcks) Receive() ([]byte, error) {
 
 	if !packet.IsChecksumValid() {
 		log.Println("Bit error detected! Checksum does not match.")
-		log.Printf("Sending ACK %d.\n", r.lastOkAck)
-        ackMsg, _ := reliability.SerializeAckData(r.lastOkAck, "ACK")
-		r.Socket.WriteToUDP([]byte(ackMsg), addr)
+        log.Println("Staying silent.")
+        // ackMsg, _ := reliability.SerializeAckData(r.lastOkAck, "ACK")
+		// r.Socket.WriteToUDP([]byte(ackMsg), addr)
 		return r.Receive()
 	}
 

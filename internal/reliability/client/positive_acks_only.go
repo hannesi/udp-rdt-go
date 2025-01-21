@@ -14,10 +14,10 @@ type ReliabilityLayerWithPositiveAcks struct {
 }
 
 func NewReliabilityLayerWithPositiveAcks(socket *virtualsocket.VirtualSocket) *ReliabilityLayerWithPositiveAcks {
-    return &ReliabilityLayerWithPositiveAcks{
-        Socket: socket,
-        sequencer: *utils.NewSequencer(1),
-    }
+	return &ReliabilityLayerWithPositiveAcks{
+		Socket:    socket,
+		sequencer: *utils.NewSequencer(1),
+	}
 }
 
 func (r *ReliabilityLayerWithPositiveAcks) Send(data []byte) error {
@@ -35,23 +35,36 @@ func (r *ReliabilityLayerWithPositiveAcks) Send(data []byte) error {
 func (r *ReliabilityLayerWithPositiveAcks) sendWithRetransmission(data []byte) {
 	r.Socket.Send(data)
 	sequence, ack, err := r.receiveAck()
-	if ack != "ACK" || sequence != r.sequencer.Current() || err != nil {
-		log.Println("Resending packet.")
-		r.sendWithRetransmission(data)
+	if ack == "ACK" && sequence == r.sequencer.Current() && err == nil {
+		log.Printf("Received valid ACK: %s %d.\n", ack, sequence)
+		return
 	}
+
+	if err != nil {
+		log.Println(err.Error())
+	} else {
+		log.Println("Invalid ack or sequence mismatch.")
+	}
+	log.Println("Resending packet.")
+    r.sendWithRetransmission(data)
 }
 
 func (r *ReliabilityLayerWithPositiveAcks) receiveAck() (uint8, string, error) {
-	responseBuffer := make([]byte, 4)
-	_, err := r.Socket.Receive(responseBuffer)
+	buffer := make([]byte, 4)
 
-    sequence, ack, err := reliability.DeserializeAckData([]byte(responseBuffer))
+	_, err := r.Socket.Receive(buffer)
 
 	if err != nil {
+		log.Println("Error receiving ACK:", err.Error())
+		return 0, "", err
+	}
+
+	sequence, ack, err := reliability.DeserializeAckData(buffer)
+	if err != nil {
+		log.Println("Error deserializing ACK:", err.Error())
 		return 0, "", err
 	}
 
 	log.Printf("Received response %s %d.\n", ack, sequence)
-
-	return sequence, ack, nil
+    return sequence, ack, nil
 }

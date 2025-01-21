@@ -52,6 +52,7 @@ func (r *ReliabilityLayerWithPositiveAcks) sendWithRetransmission(data []byte) {
 func (r *ReliabilityLayerWithPositiveAcks) receiveAck() (uint8, string, error) {
 	buffer := make([]byte, 4)
 
+    log.Println("Waiting for ack...")
 	_, err := r.Socket.Receive(buffer)
 
 	if err != nil {
@@ -65,6 +66,5 @@ func (r *ReliabilityLayerWithPositiveAcks) receiveAck() (uint8, string, error) {
 		return 0, "", err
 	}
 
-	log.Printf("Received response %s %d.\n", ack, sequence)
     return sequence, ack, nil
 }

@@ -26,7 +26,7 @@ func main() {
     }
     defer socket.Close()
 
-    reliabilityLayer := server.NewReliabilityLayerWithNegativeAcks(socket)
+    reliabilityLayer := server.NewReliableTransportProtocol(socket)
 
     fmt.Printf("UDP server is listening on %s\n", addr.String())
 

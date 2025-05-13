@@ -49,31 +49,33 @@ func NewVirtualSocket() (*VirtualSocket, error) {
 
 // Send data using the virtual socket.
 func (vs *VirtualSocket) Send(data []byte) error {
-    internalData := make([]byte, len(data))
-    copy(internalData, data)
+	internalData := make([]byte, len(data))
+	copy(internalData, data)
 
 	if vs.shouldDrop() {
 		return nil
 	}
 
-	vs.handlePacketDelay()
-    
-    internalData = vs.handleBitError(internalData)
+	internalData = vs.handleBitError(internalData)
 
-    log.Printf("Sending packet: %b", internalData)
-	_, err := vs.socket.Write(internalData)
-	return err
+	if rand.Float64() < vs.delayRate {
+		go vs.sendWithDelay(internalData)
+	} else {
+		vs.socket.Write(internalData)
+	}
+
+	return nil
 }
 
 func (vs *VirtualSocket) Receive(buffer []byte) (int, error) {
-    vs.socket.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
-    n, err := vs.socket.Read(buffer)
+	vs.socket.SetReadDeadline(time.Now().Add(config.DefaultConfig.ReliabilityLayerAckWaitTime))
+	n, err := vs.socket.Read(buffer)
 
-    if err != nil {
-        return n, err
-    }
+	if err != nil {
+		return n, err
+	}
 
-    return n, nil
+	return n, nil
 }
 
 // Close the socket wrapped inside the virtual socket.
@@ -91,18 +93,18 @@ func (vs *VirtualSocket) shouldDrop() bool {
 	return packetDropped
 }
 
-func (vs *VirtualSocket) handlePacketDelay() {
-	if rand.Float64() < vs.delayRate {
-		log.Printf("Packet delayed by %d milliseconds.\n", vs.delay.Milliseconds())
-		time.Sleep(vs.delay)
-	}
+func (vs *VirtualSocket) sendWithDelay(data []byte) (int, error) {
+	log.Printf("Packet delayed by %d milliseconds.\n", vs.delay.Milliseconds())
+	time.Sleep(vs.delay)
+	length, err := vs.socket.Write(data)
+	return length, err
 }
 
 func (vs *VirtualSocket) handleBitError(data []byte) []byte {
 	if rand.Float64() > vs.errorRate {
 		return data
 	}
-    log.Println("Bit error introduced.")
+	log.Println("Bit error introduced.")
 	idx := rand.IntN(len(data))
 	data[idx] ^= 1 << uint(rand.IntN(8))
 	return data

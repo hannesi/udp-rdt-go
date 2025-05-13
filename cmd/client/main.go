@@ -25,7 +25,7 @@ func main() {
 
 	defer socket.Close()
 
-	reliabilityLayer := client.NewReliabilityLayerWithNegativeAcks(socket)
+	reliabilityLayer := client.NewReliableTransportProtocol(socket)
 
 	fmt.Printf("Ready to send messages to %s:%d\n", config.DefaultConfig.IPAddrString, config.DefaultConfig.ServerPort)
 	fmt.Println("Usage: Type a message and hit enter :)")

@@ -14,10 +14,7 @@
 
     <h2>How to run the solutions</h2>
 
-    <p>TODO: update this section for Go</p>
-
-    <p>To run the solutions you need to have the <a href="https://www.rust-lang.org/tools/install" target="_blank">Rust
-            toolchain</a> installed.</p>
+    <p>To run the solutions you need Go 1.23.4 or newer installed.</p>
 
     <p>To start the server, run:</p>
     <code>go run cmd/server/main.go</code>
@@ -62,22 +59,26 @@
 
     <h3>Positive and Negative ACKs</h3>
     <ol>
-        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-1" target="_blank">[Examine]</a> <a
+        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-1"
+                target="_blank">[Examine]</a> <a
                 href="https://github.com/hannesi/udp-rdt-go/archive/refs/tags/positive-and-negative-acks-1.zip"
                 target="_blank">[Download]</a>
             (2p) Add to your data packet some method for detecting at least a single bit error.
         </li>
-        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-2" target="_blank">[Examine]</a> <a
+        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-2"
+                target="_blank">[Examine]</a> <a
                 href="https://github.com/hannesi/udp-rdt-go/archive/refs/tags/positive-and-negative-acks-2.zip"
                 target="_blank">[Download]</a>
             (2p) Reliable data transfer with positive and negative ACKs
         </li>
-        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-3d" target="_blank">[Examine]</a> <a
+        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-3d"
+                target="_blank">[Examine]</a> <a
                 href="https://github.com/hannesi/udp-rdt-go/archive/refs/tags/positive-and-negative-acks-3d.zip"
                 target="_blank">[Download]</a>
             (4p) Reliable data transfer with only positive ACKs
         </li>
-        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-4" target="_blank">[Examine]</a> <a
+        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/positive-and-negative-acks-4"
+                target="_blank">[Examine]</a> <a
                 href="https://github.com/hannesi/udp-rdt-go/archive/refs/tags/positive-and-negative-acks-4.zip"
                 target="_blank">[Download]</a>
             (4p) Reliable data transfer with only negative ACKs
@@ -85,17 +86,23 @@
     </ol>
 
     <h3>Reliable Transfer Protocol</h3>
-    <p><strong>NOTE:</strong> If you restart the client or the server, restart the other one too. There is a bug with how sequence numbers are handled.</p>
-    <p><strong>TIP:</strong> You can use the command <code>/spam</code> in the client to send a series of predefined messages.</p>
+    <p><strong>NOTE:</strong> If you restart the client or the server, restart the other one too. There is a bug with
+        how sequence numbers are handled.</p>
+    <p><strong>TIP:</strong> You can use the command <code>/spam</code> in the client to send a series of predefined
+        messages.</p>
     <ol>
-        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/reliable-transport-protocol" target="_blank">[Examine]</a>
-            <a href="https://github.com/hannesi/udp-rdt-go/archive/refs/tags/reliable-transport-protocol.zip" target="_blank">[Download]</a>
+        <li><a href="https://github.com/hannesi/udp-rdt-go/tree/reliable-transport-protocol"
+                target="_blank">[Examine]</a>
+            <a href="https://github.com/hannesi/udp-rdt-go/archive/refs/tags/reliable-transport-protocol.zip"
+                target="_blank">[Download]</a>
             (12p) Implement reliable data transfer on top of UDP that can handle packet loss, packet delay and single
             bit error (detect error and react accordingly).
         </li>
     </ol>
 
     <h3>Go-Back-N (GBN)</h3>
+    <p><strong>NOTE:</strong> In this solution the client sends a bunch of messages automatically.</p>
+    <p><strong>NOTE:</strong> This solution has a basic handshake protocol implemented, so there is no need to restart the server even if you restart the client.</p>
     <ol>
         <li><a href="https://github.com/hannesi/go-back-n/tree/gbn" target="_blank">[Examine]</a>
             <a href="https://github.com/hannesi/go-back-n/archive/refs/tags/gbn.zip" target="_blank">[Download]</a>
@@ -104,13 +111,17 @@
     </ol>
 
     <h3>Selective Repeat</h3>
+    <p><strong>NOTE:</strong> In this solution the client sends a bunch of messages automatically.</p>
+    <p><strong>NOTE:</strong> There is no handshake in this solution, so you have to restart the server if you restart the client.</p>
     <ol>
-        <li><a href="" target="_blank">[Examine]</a>
-            <a href="" target="_blank">[Download]</a>
-            (5p) Draw a finite-state machine (FSM) of Selective Repeat sender and receiver
+        <li>
+            <!-- <a href="" target="_blank">[Examine]</a> -->
+            <!-- <a href="" target="_blank">[Download]</a> -->
+            <s>(5p) Draw a finite-state machine (FSM) of Selective Repeat sender and receiver</s>
         </li>
-        <li><a href="" target="_blank">[Examine]</a>
-            <a href="" target="_blank">[Download]</a>
+        <li><a href="https://github.com/hannesi/selective-repeat/tree/sr" target="_blank">[Examine]</a>
+            <a href="https://github.com/hannesi/selective-repeat/archive/refs/tags/sr.zip"
+                target="_blank">[Download]</a>
             (7p) Implement Selective Repeat on top of UDP.
         </li>
     </ol>
